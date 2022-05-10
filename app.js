@@ -1,4 +1,5 @@
 const express = require('express'),
+  _ = require('lodash'),
   ejs = require('ejs'),
   app = express(),
   port = process.env.PORT || 3000
@@ -45,7 +46,13 @@ app.post('/compose', (req, res) => {
 })
 
 app.get('/posts/:title', (req, res) => {
-  console.log(req.params.title)
+  const requestedTitle = _.lowerCase(req.params.title)
+  posts.forEach((post) => {
+    const storedTitle = _.lowerCase(post.title)
+    if (requestedTitle === storedTitle) {
+      res.render('post', { title: post.title, content: post.content })
+    }
+  })
 })
 
 app.listen(port, () => console.log(`Server started on port ${port}`))
